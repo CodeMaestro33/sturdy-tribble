@@ -1,28 +1,35 @@
 import os
-import time
-from datetime import datetime
 import subprocess
+from datetime import datetime
+import random
 
-# Path to your repository
-repo_path = os.getcwd()
+# File to modify
+file_path = "changes.txt"
 
-# Change the file that will be modified
-file_path = os.path.join(repo_path, "example.txt")
+# Generate some content
+new_content = f"Change made at {datetime.now()}. Random number: {random.randint(1, 100)}\n"
 
-# Function to modify the file
-def modify_file():
-    with open(file_path, "a") as f:
-        # Append the current time to the file
-        f.write(f"Changes made at {datetime.now()}\n")
+# Append the content to the file
+with open(file_path, "a") as file:
+    file.write(new_content)
 
-# Function to run Git commands
-def git_commit_push():
-    subprocess.run(["git", "add", file_path], cwd=repo_path)
-    subprocess.run(["git", "commit", "-m", "Automated commit at " + str(datetime.now())], cwd=repo_path)
-    subprocess.run(["git", "push"], cwd=repo_path)
+# Automate Git operations
+try:
+    # Configure Git (use your GitHub username and email)
+    subprocess.run(["git", "config", "user.name", "your-username"], check=True)
+    subprocess.run(["git", "config", "user.email", "your-email@example.com"], check=True)
 
-# Main loop to make changes and commit every 15 minutes
-while True:
-    modify_file()  # Modify the file
-    git_commit_push()  # Commit and push the changes
-    time.sleep(15 * 60)  # Wait for 15 minutes before running again
+    # Stage changes
+    subprocess.run(["git", "add", file_path], check=True)
+
+    # Commit changes
+    commit_message = f"Auto-update at {datetime.now()}"
+    subprocess.run(["git", "commit", "-m", commit_message], check=True)
+
+    # Push changes to the repository
+    subprocess.run(["git", "push"], check=True)
+
+    print("Changes pushed successfully!")
+
+except subprocess.CalledProcessError as e:
+    print(f"An error occurred: {e}")
