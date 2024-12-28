@@ -20,8 +20,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config user.name "CodeMaestro33"  # Replace with your GitHub username
+        git config user.email "achikiliakar@gmail.com"  # Replace with your GitHub email
         git add .
         git commit -m "Automated commit from GitHub Actions" || echo "No changes to commit"
         git push
